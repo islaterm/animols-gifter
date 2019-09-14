@@ -21,5 +21,5 @@ class GifDatabase:
     def gif_list(self):
         return self._gif_list
 
-    def add_gifs(self, *gifs: str):
+    def add_gif(self, gif: str):
         pass
