@@ -37,7 +37,7 @@ class GifDatabaseTest(unittest.TestCase):
         Initializes the fields to be used in the tests
         """
         self._test_db_path = "TestDB.json"
-        self._json_file = open(self._test_db_path, "w+")
+        self._json_file = open(self._test_db_path, "wr+")
         self._expected_gif_list = [str(random()), str(random()), str(random()),
                                    str(random())]
 
@@ -66,6 +66,7 @@ class GifDatabaseTest(unittest.TestCase):
             # results match through every insertion
             test_db.add_gif(gif)
             assert test_db.gif_list == self._expected_gif_list[:index]
+            assert json.load(self._json_file) == self._expected_gif_list[:index]
 
 
 if __name__ == '__main__':
