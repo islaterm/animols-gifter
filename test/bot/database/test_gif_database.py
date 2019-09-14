@@ -5,7 +5,7 @@ import json
 import os
 import unittest
 from random import random
-from typing import List, TextIO
+from typing import List
 
 from bot.database.gifs import GifDatabase
 
@@ -29,7 +29,7 @@ class GifDatabaseTest(unittest.TestCase):
     Test set for the database
     """
     _expected_gif_list: List[str]
-    _json_file: TextIO
+    # _json_file: TextIO
     _test_db_path: str
 
     def setUp(self) -> None:
@@ -37,7 +37,7 @@ class GifDatabaseTest(unittest.TestCase):
         Initializes the fields to be used in the tests
         """
         self._test_db_path = "TestDB.json"
-        self._json_file = open(self._test_db_path, "wr+")
+        # self._json_file = open(self._test_db_path, "w+")
         self._expected_gif_list = [str(random()), str(random()), str(random()),
                                    str(random())]
 
@@ -45,14 +45,15 @@ class GifDatabaseTest(unittest.TestCase):
         """
         Deletes the files created in the tests
         """
-        self._json_file.close()
+        # self._json_file.close()
         os.remove(self._test_db_path)
 
     def test_db_load(self) -> None:
         """
         Checks if the database can be loaded correctly from a json file.
         """
-        json.dump(self._expected_gif_list, self._json_file)
+        with open(self._test_db_path, 'w+') as json_file:
+            json.dump(self._expected_gif_list, json_file)
         test_db = GifDatabase(self._test_db_path)
         assert test_db.gif_list == self._expected_gif_list
 
@@ -66,7 +67,12 @@ class GifDatabaseTest(unittest.TestCase):
             # results match through every insertion
             test_db.add_gif(gif)
             assert test_db.gif_list == self._expected_gif_list[:index]
-            assert json.load(self._json_file) == self._expected_gif_list[:index]
+            with open(self._test_db_path, 'r') as json_file:
+                assert json.load(self._json_file) == self._expected_gif_list[:index]
+        for gif in self._expected_gif_list:
+            # Tries to add repeated gifs to the database and checks that they're not added
+            test_db.add_gif(gif)
+        assert test_db.gif_list == self._expected_gif_list
 
 
 if __name__ == '__main__':
