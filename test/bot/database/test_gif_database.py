@@ -29,7 +29,6 @@ class GifDatabaseTest(unittest.TestCase):
     Test set for the database
     """
     _expected_gif_list: List[str]
-    # _json_file: TextIO
     _test_db_path: str
 
     def setUp(self) -> None:
@@ -37,7 +36,6 @@ class GifDatabaseTest(unittest.TestCase):
         Initializes the fields to be used in the tests
         """
         self._test_db_path = "TestDB.json"
-        # self._json_file = open(self._test_db_path, "w+")
         self._expected_gif_list = [str(random()), str(random()), str(random()),
                                    str(random())]
 
@@ -45,7 +43,6 @@ class GifDatabaseTest(unittest.TestCase):
         """
         Deletes the files created in the tests
         """
-        # self._json_file.close()
         os.remove(self._test_db_path)
 
     def test_db_load(self) -> None:
@@ -68,7 +65,7 @@ class GifDatabaseTest(unittest.TestCase):
             test_db.add_gif(gif)
             assert test_db.gif_list == self._expected_gif_list[:index]
             with open(self._test_db_path, 'r') as json_file:
-                assert json.load(self._json_file) == self._expected_gif_list[:index]
+                assert json.load(json_file) == self._expected_gif_list[:index]
         for gif in self._expected_gif_list:
             # Tries to add repeated gifs to the database and checks that they're not added
             test_db.add_gif(gif)
